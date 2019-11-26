@@ -1,0 +1,59 @@
+<b>Daily Log: Gaurav Atreya</b><br>
+<b>Date: {{date}}</b>
+<ul>
+    {%if task_today|length>0 %}
+    <li> Task of the day:
+        <ol>
+            {% for task in task_today %}
+                <li> {{task}}</td>
+            {% endfor %}
+        </ol>
+    </li>
+    {% endif %}
+    {%if task_completed|length>0 %}
+    <li>Completed task:
+        <ol>
+            {% for task in task_completed %}
+            <li> {{task}}</td>
+            {% endfor %}
+        </ol>
+    </li>
+    {% endif %}
+    {%if issues|length>0 %}
+    <li>Faced issues:
+        <ol>
+            {% for issue in issues %}
+            <li> {{issue}}</li>
+            {% endfor %}
+        </ol>
+    </li>
+    {% endif %}
+    {%if solved_problems|length>0 %}
+    <li>Solved problems:
+        <ol>
+            {% for problem in solved_problems %}
+            <li> {{problem}}</li>
+            {% endfor %}
+        </ol>
+    </li>
+    {% endif %}
+    {%if unsolved_problems|length>0 %}
+    <li>Unsolved problems:
+        <ol>
+            {% for problem in unsolved_problems %}
+            <li> {{problem}}</li>
+            {% endfor %}
+        </ol>
+    </li>
+    {% endif %}
+    {%if plans_tomorrow|length>0 %}
+    <li>Planning for tomorrow:
+        <ol>
+            {% for plan in plans_tomorrow %}
+            <li> {{plan}}</li>
+            {% endfor %}
+        </ol>
+    </li>
+    {% endif %}
+</ul>
+    
