@@ -1,5 +1,6 @@
-<b>Daily Log: Gaurav Atreya</b><br>
+<b>Daily Log: {{name}}</b><br>
 <b>Date: {{date}}</b>
+<!-- <p>{{salutation}}</p> -->
 <ul>
     {%if task_today|length>0 %}
     <li> Task of the day:
@@ -56,4 +57,9 @@
     </li>
     {% endif %}
 </ul>
+<!-- <p>{{end_statement}}</p>> -->
+<p>
+Sincerely, <br> 
+{{name}}
+</p>
     
