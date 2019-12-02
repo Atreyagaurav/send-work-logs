@@ -6,8 +6,8 @@ import datetime
 from jinja2 import Template
 import json
 
-MAIL_TO_ME=False
-DEBUGGING_MODE=False
+MAIL_TO_ME=True
+DEBUGGING_MODE=True
 
 from custom_decorators import *
 
@@ -25,6 +25,7 @@ class WorkLog:
         'solved_problems':[],
         'unsolved_problems':[],
         'planning_for_tomorrow':[]}
+        self.history=None
         self.html_body=None
         self.rendered_html=None
     
@@ -32,7 +33,7 @@ class WorkLog:
         with open("worklog.json","r") as json_file:
             log=json.load(json_file)[-1]
         if self.date in log:
-            self.worklog=log[self.date]
+            self.history=log[self.date]
             return True
         else:
             return False
@@ -49,6 +50,11 @@ class WorkLog:
                         solved_problems=self.worklog['solved_problems'], \
                             unsolved_problems=self.worklog['unsolved_problems'], \
                                 plans_tomorrow=self.worklog['planning_for_tomorrow'])
+        if DEBUGGING_MODE:
+            with open("test.html","w") as html:
+                html.write(self.rendered_html)
+            print("rendered email saved to test.html")
+            
     
     # @color_console('green')
     def save_worklog(self):
@@ -67,11 +73,15 @@ class WorkLog:
             change_color()
             input_string=None
             while (input_string!=''):
-                if input_string:
+                if input_string in ['re','RE','Re']:
+                    self.worklog[key].pop()
+                    delete_prev_line(2)
+                elif input_string:
                     self.worklog[key].append(input_string)
                 input_string=input("\t>")
             delete_prev_line()
-        self.save_worklog()
+        if not DEBUGGING_MODE:
+            self.save_worklog()
         
 
     def send_mail(self):
@@ -98,15 +108,16 @@ class WorkLog:
 if __name__=="__main__":
     try:
         log=WorkLog()
-        print(log.load_history())
         if log.load_history():
             change_color('bred')
             print("You have a worklog entry for this date:")
             change_color()
             print("do you want to send that to:"+log.mailto+"?\n<y>/n:")
             response=input("")
-            if response not in ['\n','y']:
+            if response not in ['\n','y','']:
                 log.input_logs()
+            else:
+                log.worklog=log.history
         else:
             log.input_logs()
         log.load_html()

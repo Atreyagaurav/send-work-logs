@@ -66,7 +66,9 @@ def cursor_move(direction,n):
 def change_color(color='reset'):
     print(get_color_string(color),end="")
 
-def delete_prev_line():
-    print(cursor_move('up',1),end="")
-    print('\u001b[{n}K'.format(n=2),end="")
-    print(cursor_move('left',1000),end="")
+def delete_prev_line(n=1):
+    for i in range(n):
+        print(cursor_move('up',1),end="")
+        print('\u001b[{n}K'.format(n=2),end="")
+        print(cursor_move('left',1000),end="")
+        
