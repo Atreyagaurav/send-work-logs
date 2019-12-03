@@ -5,18 +5,20 @@ import os
 import datetime
 from jinja2 import Template
 import json
+from bs4 import BeautifulSoup
 
 MAIL_TO_ME=True
-DEBUGGING_MODE=True
+DEBUGGING_MODE=False
 
 from custom_decorators import *
+import config
 
 class WorkLog:
-    def __init__(self,name='Your Name',email="yourmail@eydean.com"):
+    def __init__(self,name=config.email,email=config.email):
         self.name=name
         self.email=email
-        self.mailto=self.email if MAIL_TO_ME else 'samplemail@eydean.com' 
-        self.cc=None
+        self.mailto=config.mail_to_debug if MAIL_TO_ME else config.mail_to_final
+        self.cc=config.cc_final
         self.date=str(datetime.date.today())
         self.worklog={
         'task_of_today':[],
@@ -51,10 +53,8 @@ class WorkLog:
                             unsolved_problems=self.worklog['unsolved_problems'], \
                                 plans_tomorrow=self.worklog['planning_for_tomorrow'])
         if DEBUGGING_MODE:
-            with open("test.html","w") as html:
-                html.write(self.rendered_html)
-            print("rendered email saved to test.html")
-            
+            soup=BeautifulSoup(self.rendered_html,'html.parser')
+            print(soup.prettify())
     
     # @color_console('green')
     def save_worklog(self):
@@ -72,6 +72,10 @@ class WorkLog:
             print("Enter: "+key+":<enter twice to end>:")
             change_color()
             input_string=None
+            if key=='task_completed':
+                for task in self.worklog['task_of_today']:
+                    print("\t>"+task)
+                    self.worklog[key].append(task)
             while (input_string!=''):
                 if input_string in ['re','RE','Re']:
                     self.worklog[key].pop()
@@ -87,7 +91,7 @@ class WorkLog:
     def send_mail(self):
         change_color('yellow')
         print("Creating email.... Please wait...")
-        MY_KEY=os.getenv('MY_ZOHO_KEY')
+        MY_KEY=config.ZOHO_KEY
         msg = MIMEMultipart()
         msg['From'] = self.email
         msg['To'] = self.mailto
