@@ -15,7 +15,7 @@ class WorkLog:
     def __init__(self,name='Your Name',email="yourmail@eydean.com"):
         self.name=name
         self.email=email
-        self.mailto='samplemail@eydean.com' if MAIL_TO_ME else self.email
+        self.mailto=self.email if MAIL_TO_ME else 'samplemail@eydean.com' 
         self.cc=None
         self.date=str(datetime.date.today())
         self.worklog={
