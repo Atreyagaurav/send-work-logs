@@ -15,7 +15,7 @@ class WorkLog:
     def __init__(self,name=config.name,email=config.email):
         self.name=name
         self.email=email
-        self.mailto=config.mail_to_final
+        self.mailto=config.mail_to
         self.cc=config.cc_final
         self.date=str(datetime.date.today())
         self.date+=" "+datetime.datetime.strptime(self.date,"%Y-%m-%d").strftime("%A")

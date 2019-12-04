@@ -5,7 +5,7 @@ DEBUGGING_MODE=False
 
 name='Your Name'
 email="your.mail@eydean.com"
-ZOHO_KEY=os.getenv('MY_ZOHO_KEY')
+ZOHO_KEY='MY_ZOHO_KEY'
 
 mail_to_final='person.to.send@eydean.com' 
 cc_to_final=None
@@ -16,7 +16,7 @@ cc_final= None if MAIL_TO_ME else cc_to_final
 
 
 json_path="worklog.json"
-if not os.path.isfile(json_path):
+if not os.path.exists(json_path):
     name=[{'name':name}]
-    with open(json_path) as r:
-        json.dump(name,r)
+    with open(json_path,"w") as w:
+        json.dump(name,w)
