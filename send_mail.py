@@ -14,12 +14,13 @@ from custom_decorators import *
 import config
 
 class WorkLog:
-    def __init__(self,name=config.email,email=config.email):
+    def __init__(self,name=config.name,email=config.email):
         self.name=name
         self.email=email
         self.mailto=config.mail_to_debug if MAIL_TO_ME else config.mail_to_final
         self.cc=config.cc_final
         self.date=str(datetime.date.today())
+        self.date+=" "+datetime.datetime.strptime(self.date,"%Y-%m-%d").strftime("%A")
         self.worklog={
         'task_of_today':[],
         'task_completed':[],
@@ -109,22 +110,34 @@ class WorkLog:
         print("Process completed, your email is sent.")
         change_color()
 
+def ask_conformation(statement):
+    change_color('bred')
+    print(statement+"\n<y>/n:",end="")
+    change_color()
+    response=input("")
+    if response not in ['\n','y','']:
+        return False
+    return True
+
 if __name__=="__main__":
     try:
+        if DEBUGGING_MODE:
+            print("*"*10,"DEBUGGING MODE","*"*10)
         log=WorkLog()
         if log.load_history():
-            change_color('bred')
-            print("You have a worklog entry for this date:")
-            change_color()
-            print("do you want to send that to:"+log.mailto+"?\n<y>/n:")
-            response=input("")
-            if response not in ['\n','y','']:
-                log.input_logs()
-            else:
+            response=ask_conformation("You have a worklog entry for this date:\n"+"do you want to send that to:"+log.mailto+"?")
+            if response:
                 log.worklog=log.history
+            else:
+                log.history=None
+                log.input_logs()
         else:
             log.input_logs()
         log.load_html()
+        if not log.history:
+            response=ask_conformation("Continue sending mail to :"+log.mailto+"?")
+            if not response:
+                exit()
         if not DEBUGGING_MODE:
             log.send_mail()
         else:
