@@ -7,8 +7,6 @@ from jinja2 import Template
 import json
 from bs4 import BeautifulSoup
 
-MAIL_TO_ME=True
-DEBUGGING_MODE=False
 
 from custom_decorators import *
 import config
@@ -17,7 +15,7 @@ class WorkLog:
     def __init__(self,name=config.name,email=config.email):
         self.name=name
         self.email=email
-        self.mailto=config.mail_to_debug if MAIL_TO_ME else config.mail_to_final
+        self.mailto=config.mail_to_final
         self.cc=config.cc_final
         self.date=str(datetime.date.today())
         self.date+=" "+datetime.datetime.strptime(self.date,"%Y-%m-%d").strftime("%A")
@@ -53,7 +51,7 @@ class WorkLog:
                         solved_problems=self.worklog['solved_problems'], \
                             unsolved_problems=self.worklog['unsolved_problems'], \
                                 plans_tomorrow=self.worklog['planning_for_tomorrow'])
-        if DEBUGGING_MODE:
+        if config.DEBUGGING_MODE:
             soup=BeautifulSoup(self.rendered_html,'html.parser')
             print(soup.prettify())
     
@@ -85,7 +83,7 @@ class WorkLog:
                     self.worklog[key].append(input_string)
                 input_string=input("\t>")
             delete_prev_line()
-        if not DEBUGGING_MODE:
+        if not config.DEBUGGING_MODE:
             self.save_worklog()
         
 
@@ -121,7 +119,7 @@ def ask_conformation(statement):
 
 if __name__=="__main__":
     try:
-        if DEBUGGING_MODE:
+        if config.DEBUGGING_MODE:
             print("*"*10,"DEBUGGING MODE","*"*10)
         log=WorkLog()
         if log.load_history():
@@ -138,7 +136,7 @@ if __name__=="__main__":
             response=ask_conformation("Continue sending mail to :"+log.mailto+"?")
             if not response:
                 exit()
-        if not DEBUGGING_MODE:
+        if not config.DEBUGGING_MODE:
             log.send_mail()
         else:
             print("Debugging mode: reached end of program...")
