@@ -95,7 +95,7 @@ class WorkLog:
         msg['From'] = self.email
         msg['To'] = self.mailto
         msg['cc']=self.cc
-        msg['Subject'] = "Re: Work Log: "+self.name
+        msg['Subject'] = config.Mail_subject
         msg.attach(MIMEText(self.rendered_html, 'html'))
         server = smtplib.SMTP('smtp.zoho.com:587')
         server.starttls()

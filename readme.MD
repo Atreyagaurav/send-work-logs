@@ -11,7 +11,7 @@ It uses zoho server for emailing right now. To use it with gmail change the smtp
     - click `Generate New App Password` then type a name and generate.
     - copy that key to replace MY_ZOHO_KEY in config.py
 * After everything is finished you can run the send_mail.py
-
+* if you are sending for the first time use `"Work Log: "+name` as subject, otherwise use `"Re: Work Log: "+name` to send mail to the same thread.
 ## Instruction to Use the module:
 
 * run the send_mail.py
